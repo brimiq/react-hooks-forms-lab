@@ -1,20 +1,30 @@
 import React, { useState } from "react";
-import ShoppingList from "./ShoppingList";
 import Header from "./Header";
-import itemData from "../data/items";
+import ShoppingList from "./ShoppingList";
+import itemsData from "../data/items"; // <-- your data file
 
 function App() {
-  const [items, setItems] = useState(itemData);
+  const [items, setItems] = useState(itemsData);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   function handleDarkModeClick() {
-    setIsDarkMode((isDarkMode) => !isDarkMode);
+    setIsDarkMode((prevMode) => !prevMode);
   }
 
+  function handleAddItem(newItem) {
+    // Use spread operator to add a new item immutably
+    setItems([...items, newItem]);
+  }
+
+  const appClass = isDarkMode ? "App dark" : "App light";
+
   return (
-    <div className={"App " + (isDarkMode ? "dark" : "light")}>
-      <Header isDarkMode={isDarkMode} onDarkModeClick={handleDarkModeClick} />
-      <ShoppingList items={items} />
+    <div className={appClass}>
+      {/* Pass the dark mode toggle callback to Header */}
+      <Header onDarkModeClick={handleDarkModeClick} />
+
+      {/* Pass both the items array and the add-item callback to ShoppingList */}
+      <ShoppingList items={items} onItemFormSubmit={handleAddItem} />
     </div>
   );
 }
